@@ -29,7 +29,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./db-data/postgres_prod:/var/lib/postgresql/data
+      - ./db/db-data/postgres_prod:/var/lib/postgresql/data
 
   postgres_test:
     image: postgres:15
@@ -41,4 +41,4 @@ services:
     ports:
       - "5433:5432"
     volumes:
-      - ./db-data/postgres_test:/var/lib/postgresql/data
+      - ./db/db-data/postgres_test:/var/lib/postgresql/data
