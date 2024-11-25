@@ -7,11 +7,14 @@ HealthTrack API is a TypeScript-powered RESTful API designed to manage patient r
 ## Features
 
 - Perform **Create, Read, Update, Delete (CRUD)** operations on patient records.
-- Schema-based validation powered by **class-validator**.
-- Database integration using **PostgreSQL** and **Prisma ORM**.
-- Comprehensive **integration testing** using Jest.
-- Middleware for validating **DTOs (Data Transfer Objects)**.
-- Fully **containerized** with Docker and Docker Compose for easy deployment.
+- Schema-based validation powered by class-validator.
+- Database integration using PostgreSQL and Prisma ORM.
+- Comprehensive integration testing using Jest.
+- Middleware for validating DTOs (Data Transfer Objects).
+- Fully containerized with Docker and Docker Compose for easy deployment.
+- Authentication and Authorization:
+- Secure API access using JWT (JSON Web Tokens).
+- Role-based access control (RBAC) for different user roles (e.g., admin, doctor).
 
 ---
 
@@ -34,13 +37,14 @@ HealthTrack API is a TypeScript-powered RESTful API designed to manage patient r
 3. Prerequisites
 4. Setup Instructions
 5. Environment Variables
-6. Database Models
-7. API Endpoints
-8. Project Structure
-9. Testing
-10. Troubleshooting
-11. Future Improvements
-12. Contact Me
+6. Authentication & Authorization
+7. Database Models
+8. API Endpoints
+9. Project Structure
+10. Testing
+11. Troubleshooting
+12. Future Improvements
+13. Contact Me
 
 ---
 
@@ -91,33 +95,63 @@ TEST_DATABASE_URL=postgres://postgres_test:password@postgres_test:5432/test_pati
 Note: Ensure these values match the credentials in docker-compose.yml.
 
 #Prisma Migration
-npx prisma generate
-npx prisma migrate dev --name init
-npx prisma studio
+
+After setting up the .env, run the following commands to generate the Prisma client and apply database migrations:
+
+BASH
+- npx prisma generate
+- npx prisma migrate dev --name init
+- npx prisma studio
 
 Database Models
 The API uses Prisma ORM to define and interact with the database. Below are the models:
 
-Model Overview
-Patient
+## Model Overview
+# Patient
 
-Stores details such as name, dateOfBirth, and contactInfo.
-Has a one-to-many relationship with MedicalHistory.
-MedicalHistory
+- Stores details such as name, dateOfBirth, and contactInfo.
+- Has a one-to-many relationship with MedicalHistory.
 
-Stores medical conditions of patients.
-Linked to the Patient model via the patientId foreign key.
-API Endpoints
-Base URL: http://localhost:3000/api/patients
-Method	Endpoint	Description	Request Body
-POST	/	Create a new patient	{ name, dateOfBirth, contactInfo, medicalHistory }
-GET	/	Get all patients	-
-GET	/:id	Get a patient by ID	-
-PUT	/:id	Update a patient by ID	{ name?, dateOfBirth?, contactInfo?, medicalHistory? }
-DELETE	/:id	Delete a patient by ID	-
+#MedicalHistory
+- Stores medical conditions of patients.
+- Linked to the Patient model via the patientId foreign key.
 
-Example Request
-Create Patient
+##Authentication & Authorization
+The HealthTrack API uses JWT (JSON Web Tokens) for secure authentication and Role-Based Access Control (RBAC) for managing permissions. Below is an overview of the implementation:
+
+#Authentication
+Users can log in using the /api/auth/login endpoint.
+A valid JWT token is required to access protected routes.
+Tokens are signed with a secret key (JWT_SECRET).
+
+#Roles
+The API supports the following roles:
+admin: Full access to manage patients and users.
+doctor: Restricted access to assigned patients.
+
+#Middleware
+Authentication Middleware: Ensures the request contains a valid JWT token.
+Authorization Middleware: Checks if the user has the required role to access a specific route.
+
+
+##API Endpoints
+
+- Base URL: http://localhost:3000/api
+
+# Authentication Endpoints
+- Method	Endpoint	Description	Request Body
+- POST	/auth/login	Authenticate user and get a JWT token	{ username, password }
+
+#Patient Endpoints
+- Method	Endpoint	Description	Request Body
+- POST	/patients	Create a new patient	{ name, dateOfBirth, contactInfo, medicalHistory }
+- GET	/patients	Get all patients	-
+- GET	/patients/:id	Get a patient by ID	-
+- PUT	/patients/:id	Update a patient by ID	{ name?, dateOfBirth?, contactInfo?, medicalHistory? }
+- DELETE	/patients/:id	Delete a patient by ID	-
+
+#Example Request
+Create a Patient
 HTTP
 POST /api/patients
 Content-Type: application/json
@@ -131,6 +165,7 @@ Content-Type: application/json
   ]
 }
 Response
+
 JSON
 {
   "id": 1,
@@ -141,6 +176,7 @@ JSON
     { "id": 1, "condition": "Diabetes" }
   ]
 }
+
 Project Structure
 TEXT
 healthtrack/
@@ -162,14 +198,16 @@ healthtrack/
 ├── Dockerfile                # Docker build configuration
 ├── package.json              # Node.js dependencies and scripts
 └── README.md                 # Project documentation
-Testing
-Step 1: Run Integration Tests
-Run integration tests using Docker:
+
+## Testing
+- Step 1: Run Integration Tests
+  Run integration tests using Docker:
 
 BASH
 docker-compose run test
-Step 2: Run Locally
-If running tests locally, ensure the test database is running and execute:
+
+- Step 2: Run Locally
+  If running tests locally, ensure the test database is running and execute:
 
 BASH
 npm test
