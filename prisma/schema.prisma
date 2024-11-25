@@ -20,7 +20,7 @@ model MedicalHistory {
   id        Int      @id @default(autoincrement())
   condition String
   patientId Int
-  patient   Patient  @relation(fields: [patientId], references: [id])
+  patient   Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

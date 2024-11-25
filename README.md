@@ -90,6 +90,11 @@ DATABASE_URL=postgres://postgres:password@postgres_prod:5432/patientdb
 TEST_DATABASE_URL=postgres://postgres_test:password@postgres_test:5432/test_patientdb
 Note: Ensure these values match the credentials in docker-compose.yml.
 
+#Prisma Migration
+npx prisma generate
+npx prisma migrate dev --name init
+npx prisma studio
+
 Database Models
 The API uses Prisma ORM to define and interact with the database. Below are the models:
 
