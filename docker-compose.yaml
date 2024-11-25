@@ -1,4 +1,4 @@
-version: "3.8"
+version: '3.8'
 
 services:
   app:
@@ -6,14 +6,22 @@ services:
     ports:
       - "3000:3000"
     environment:
-      DATABASE_URL: postgres://postgres:password@db:5432/patientdb
-      TEST_DATABASE_URL: postgres://postgres:test_password@test_db:5432/test_patientdb
+      DATABASE_URL: postgres://postgres:password@postgres_prod:5432/patientdb
     depends_on:
-      - db
-      - test_db
+      - postgres_prod
+    command: npm start
 
-  db:
+  test:
+    build: .
+    environment:
+      TEST_DATABASE_URL: postgres://postgres_test:password@postgres_test:5432/test_patientdb
+    depends_on:
+      - postgres_test
+    command: npm test
+
+  postgres_prod:
     image: postgres:15
+    container_name: postgres_prod
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
@@ -21,20 +29,16 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - ./db-data/postgres_prod:/var/lib/postgresql/data
 
-  # Test database
-  test_db:
+  postgres_test:
     image: postgres:15
+    container_name: postgres_test
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: test_password
+      POSTGRES_USER: postgres_test
+      POSTGRES_PASSWORD: password
       POSTGRES_DB: test_patientdb
     ports:
-      - "5433:5432" # Expose test DB on a different port (5433)
+      - "5433:5432"
     volumes:
-      - postgres-test-data:/var/lib/postgresql/data
-
-volumes:
-  postgres-data:
-  postgres-test-data:
+      - ./db-data/postgres_test:/var/lib/postgresql/data

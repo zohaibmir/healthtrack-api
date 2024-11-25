@@ -90,7 +90,6 @@ describe('PatientService Integration Tests', () => {
       };
 
       const updatedPatient = await PatientService.updatePatient(createdPatient.id, updatedData);
-      console.log(updatedPatient);
       // Assertions
       expect(updatedPatient.name).toBe('Robert Doe');
       expect(updatedPatient.contactInfo).toBe('654 Cedar St');

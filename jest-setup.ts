@@ -18,7 +18,7 @@ module.exports = async () => {
     // Execute each command separately
     await prisma.$queryRawUnsafe(`DROP SCHEMA public CASCADE;`);
     await prisma.$queryRawUnsafe(`CREATE SCHEMA public;`);
-    await prisma.$queryRawUnsafe(`GRANT ALL ON SCHEMA public TO postgres;`);
+    await prisma.$queryRawUnsafe(`GRANT ALL ON SCHEMA public TO postgres_test;`);
     await prisma.$queryRawUnsafe(`GRANT ALL ON SCHEMA public TO public;`);
     console.log("Database schema reset successfully.");
   } catch (error) {
