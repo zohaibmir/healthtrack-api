@@ -1,3 +1,10 @@
+# Dependency directories
 node_modules/
 dist/
+# Environment variables
 .env
+db/db_data/
+coverage/
+# Logs
+*.log
+logs/
