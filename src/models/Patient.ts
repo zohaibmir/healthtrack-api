@@ -1,0 +1,1 @@
+import { Patient, MedicalHistory } from '@prisma/client';

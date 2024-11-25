@@ -1,0 +1,7 @@
+{
+  "semi"; true,             // End lines with semicolons
+  "singleQuote"; true,      // Use single quotes
+  "tabWidth"; 2,            // Use 2 spaces for indentation
+  "trailingComma"; "es5",   // Add trailing commas where valid in ES5
+  "printWidth"; 80          // Wrap lines at 80 characters
+}
